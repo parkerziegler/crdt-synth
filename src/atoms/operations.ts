@@ -1,5 +1,5 @@
 import { atom } from "jotai";
-import { Op } from "../types/operations";
+import { Op, ReplicaId } from "../types/operations";
 
 const seedOperationType = () => {
   if (Math.random() < 0.33) {
@@ -17,13 +17,17 @@ const generateOperations = (): Op[] => {
       id: `operation_${i}`,
       type: seedOperationType(),
       payload: Math.floor(Math.random() * 10),
+      reconciled: false,
     };
   });
 };
 
+const replica1InitialOperations = generateOperations();
+const replica2InitialOperations = generateOperations();
+
 const initialOperations = {
-  "1": generateOperations(),
-  "2": generateOperations(),
+  "1": replica1InitialOperations,
+  "2": replica2InitialOperations,
 };
 
 export const operationsAtom = atom(initialOperations);

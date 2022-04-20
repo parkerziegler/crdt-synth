@@ -11,6 +11,7 @@ module.exports = {
         "neon-caution": "#f5cf65",
         "neon-caution-light": "#2E3024",
         outline: "#30373b",
+        "neon-white": "#464646",
       },
       fontFamily: {
         mono: '"SF Mono", SFMono-Regular, ui-monospace, "DejaVu Sans Mono", monospace',

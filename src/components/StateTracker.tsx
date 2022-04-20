@@ -1,7 +1,9 @@
+import * as React from "react";
 import { useAtom } from "jotai";
 
 import { operationsAtom } from "../atoms/operations";
 import { computeReplicaStateAtStep } from "../helpers/execution";
+import StateOption from "./StateOption";
 
 function formatSet<T>(set: Set<T>) {
   const arr = Array.from(set);
@@ -59,12 +61,18 @@ const StateTracker = () => {
           </span>
         ) : (
           <div key={i} className="flex flex-col stack-v">
-            <span className="text-white text-2xl font-bold w-48 flex justify-center shrink-0 p-6">
+            <StateOption
+              index={i}
+              choice={[operations["1"][i], operations["2"][i]]}
+            >
               {formatSet(state1)}
-            </span>
-            <span className="text-white text-2xl font-bold w-48 flex justify-center shrink-0 p-6">
+            </StateOption>
+            <StateOption
+              index={i}
+              choice={[operations["2"][i], operations["1"][i]]}
+            >
               {formatSet(state2)}
-            </span>
+            </StateOption>
           </div>
         );
       })}

@@ -15,6 +15,7 @@ const CanvasControls = () => {
         type: "add",
         id: `operation_${operations[replica as ReplicaId].length}`,
         payload: 0,
+        reconciled: false,
       };
 
       nextOps[replica as ReplicaId] =
@@ -32,6 +33,7 @@ const CanvasControls = () => {
         type: "rmv",
         id: `operation_${operations[replica as ReplicaId].length}`,
         payload: 0,
+        reconciled: false,
       };
 
       nextOps[replica as ReplicaId] =
@@ -42,15 +44,18 @@ const CanvasControls = () => {
   }, [operations]);
 
   return (
-    <div className="col-span-12 flex stack font-mono text-2xl justify-end p-10 border-b border-b-outline">
+    <div className="col-span-12 flex stack font-mono items-center p-10 border-b border-b-outline">
+      <h1 className="text-neon-caution text-5xl flex-1 font-bold">
+        Set CRDT Visualizer
+      </h1>
       <button
-        className="text-neon border border-neon px-8 py-4 hover:bg-neon-light transition-colors"
+        className="text-neon text-2xl border border-neon px-8 py-4 hover:bg-neon-light transition-colors"
         onClick={incrementAddOp}
       >
         Add +
       </button>
       <button
-        className="text-neon-negative border border-neon-negative px-8 py-4 hover:bg-neon-negative-light transition-colors"
+        className="text-neon-negative text-2xl border border-neon-negative px-8 py-4 hover:bg-neon-negative-light transition-colors"
         onClick={incrementRmvOp}
       >
         Remove -
