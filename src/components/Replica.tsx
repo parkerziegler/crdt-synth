@@ -49,7 +49,7 @@ const Replica: React.FC<Props> = ({ replicaId }) => {
         {(provided) => {
           return (
             <div className="flex items-center stack">
-              <span className="text-white text-3xl font-bold font-mono p-6 shrink-0">
+              <span className="text-white text-3xl font-bold font-mono p-6 shrink-0 basis-60">
                 Replica {replicaId}
               </span>
               <div

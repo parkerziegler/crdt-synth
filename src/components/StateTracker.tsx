@@ -35,7 +35,7 @@ const StateTracker = () => {
   return (
     <div className="flex items-top stack">
       <span
-        className="text-white text-3xl font-bold font-mono p-6 shrink-0"
+        className="text-white text-3xl font-bold font-mono p-6 shrink-0 basis-60"
         style={{ marginRight: "auto" }}
       >
         State
@@ -55,22 +55,16 @@ const StateTracker = () => {
         return checkSetsEq(state1, state2) ? (
           <span
             key={i}
-            className="text-white text-2xl font-bold w-48 flex justify-center shrink-0 p-6"
+            className="text-white text-2xl font-bold w-48 flex justify-center shrink-0 py-6"
           >
             {formatSet(state1)}
           </span>
         ) : (
-          <div key={i} className="flex flex-col stack-v">
-            <StateOption
-              index={i}
-              choice={[operations["1"][i], operations["2"][i]]}
-            >
+          <div key={i} className="flex flex-col stack-v py-6">
+            <StateOption index={i} swap={false}>
               {formatSet(state1)}
             </StateOption>
-            <StateOption
-              index={i}
-              choice={[operations["2"][i], operations["1"][i]]}
-            >
+            <StateOption index={i} swap={true}>
               {formatSet(state2)}
             </StateOption>
           </div>

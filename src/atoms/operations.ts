@@ -25,9 +25,13 @@ const generateOperations = (): Op[] => {
 const replica1InitialOperations = generateOperations();
 const replica2InitialOperations = generateOperations();
 
-const initialOperations = {
+export const operationsAtom = atom({
   "1": replica1InitialOperations,
   "2": replica2InitialOperations,
-};
+});
 
-export const operationsAtom = atom(initialOperations);
+const orderedOperations = replica1InitialOperations.map((r1Op, i) => {
+  return [r1Op, replica2InitialOperations[i]];
+});
+
+export const orderedOperationsAtom = atom(orderedOperations);

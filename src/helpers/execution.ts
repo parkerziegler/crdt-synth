@@ -19,6 +19,7 @@ export const computeReplicaStateAtStep = (
   step: number
 ): [Set<number>, Set<number>] | null => {
   const firstNonCommutativeOp = findNonCommutativeOps(ops)[0];
+
   // Set as the loop bound either of the following:
   // 1. If there is a non-commutative op and the step comes after it, use non-commutative op's index.
   // 2. Else, just use the step itself as the bound.
@@ -52,13 +53,10 @@ export const computeReplicaStateAtStep = (
       .reverse()
       .forEach((replica) => {
         const op = ops[replica as "1" | "2"][i];
-        console.log({ op });
 
         executeSetInstruction(state2, op);
       });
   }
-
-  console.log(state1, state2, step);
 
   return [state1, state2];
 };
