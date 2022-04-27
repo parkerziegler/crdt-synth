@@ -1,4 +1,4 @@
-import { Op } from "../types/operations";
+import { Op, Replicas } from "../types/operations";
 import { findNonCommutativeOps } from "./commutativity";
 
 const executeSetInstruction = (set: Set<number>, op: Op): void => {
@@ -15,7 +15,7 @@ const executeSetInstruction = (set: Set<number>, op: Op): void => {
 };
 
 export const computeReplicaStateAtStep = (
-  ops: { "1": Op[]; "2": Op[] },
+  ops: Replicas,
   step: number
 ): [Set<number>, Set<number>] | null => {
   const firstNonCommutativeOp = findNonCommutativeOps(ops)[0];
@@ -39,9 +39,11 @@ export const computeReplicaStateAtStep = (
   // Execute the operations as defined in the replicas
   // until we encounter a non-commutative pair, if one exists.
   for (let i = 0; i <= bound; i++) {
-    Object.keys(ops).forEach((replica) => {
-      const op = ops[replica as "1" | "2"][i];
+    const pair = ops["1"][i].first
+      ? [ops["1"][i], ops["2"][i]]
+      : [ops["2"][i], ops["1"][i]];
 
+    pair.forEach((op) => {
       executeSetInstruction(state1, op);
     });
   }
@@ -49,13 +51,18 @@ export const computeReplicaStateAtStep = (
   // Execute the non-commutative operation in the opposite order to show
   // the other possible state.
   for (let i = 0; i <= bound; i++) {
-    Object.keys(ops)
-      .reverse()
-      .forEach((replica) => {
-        const op = ops[replica as "1" | "2"][i];
+    const pair = ops["1"][i].first
+      ? [ops["1"][i], ops["2"][i]]
+      : [ops["2"][i], ops["1"][i]];
 
-        executeSetInstruction(state2, op);
-      });
+    // We only want to reverse pairs that haven't been reconciled.
+    if (!pair[0].reconciled && !pair[1].reconciled) {
+      pair.reverse();
+    }
+
+    pair.forEach((op) => {
+      executeSetInstruction(state2, op);
+    });
   }
 
   return [state1, state2];

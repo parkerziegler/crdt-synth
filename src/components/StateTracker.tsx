@@ -1,9 +1,7 @@
-import * as React from "react";
-import { useAtom } from "jotai";
+import { useAtomValue } from "jotai";
 
 import { operationsAtom } from "../atoms/operations";
 import { computeReplicaStateAtStep } from "../helpers/execution";
-import StateOption from "./StateOption";
 
 function formatSet<T>(set: Set<T>) {
   const arr = Array.from(set);
@@ -26,7 +24,7 @@ function checkSetsEq<T>(left: Set<T>, right: Set<T>) {
 }
 
 const StateTracker = () => {
-  const [operations, _] = useAtom(operationsAtom);
+  const operations = useAtomValue(operationsAtom);
 
   const states = new Array(operations["1"].length)
     .fill(undefined)
@@ -52,22 +50,15 @@ const StateTracker = () => {
 
         const [state1, state2] = stateAtStep;
 
-        return checkSetsEq(state1, state2) ? (
+        return (
           <span
             key={i}
             className="text-white text-2xl font-bold w-48 flex justify-center shrink-0 py-6"
           >
-            {formatSet(state1)}
+            {checkSetsEq(state1, state2)
+              ? formatSet(state1)
+              : `${formatSet(state1)} or ${formatSet(state2)}`}
           </span>
-        ) : (
-          <div key={i} className="flex flex-col stack-v py-6">
-            <StateOption index={i} swap={false}>
-              {formatSet(state1)}
-            </StateOption>
-            <StateOption index={i} swap={true}>
-              {formatSet(state2)}
-            </StateOption>
-          </div>
         );
       })}
     </div>

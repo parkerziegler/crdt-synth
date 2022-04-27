@@ -1,5 +1,5 @@
 import { atom } from "jotai";
-import { Op, ReplicaId } from "../types/operations";
+import { Op } from "../types/operations";
 
 const seedOperationType = () => {
   if (Math.random() < 0.33) {
@@ -11,27 +11,22 @@ const seedOperationType = () => {
   }
 };
 
-const generateOperations = (): Op[] => {
+const generateOperations = ({ first }: { first: boolean }): Op[] => {
   return new Array(5).fill(undefined).map((_, i) => {
     return {
       id: `operation_${i}`,
       type: seedOperationType(),
       payload: Math.floor(Math.random() * 10),
       reconciled: false,
+      first,
     };
   });
 };
 
-const replica1InitialOperations = generateOperations();
-const replica2InitialOperations = generateOperations();
+const replica1InitialOperations = generateOperations({ first: true });
+const replica2InitialOperations = generateOperations({ first: false });
 
 export const operationsAtom = atom({
   "1": replica1InitialOperations,
   "2": replica2InitialOperations,
 });
-
-const orderedOperations = replica1InitialOperations.map((r1Op, i) => {
-  return [r1Op, replica2InitialOperations[i]];
-});
-
-export const orderedOperationsAtom = atom(orderedOperations);
