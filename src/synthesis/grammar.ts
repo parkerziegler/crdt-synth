@@ -1,90 +1,163 @@
-type Expr = any;
+import { OpTypeInt } from "../types/operations";
 
-export function Ite(guard: Expr, ifBody: Expr, elseBody: Expr) {
-  return {
-    tag: "Ite",
-    guard,
-    ifBody,
-    elseBody,
-  };
-}
+export class BoolLit {
+  bool: boolean;
+  tag = "BoolLit";
 
-function Eq(left: Expr, right: Expr) {
-  return {
-    tag: "Eq",
-    left,
-    right,
-  };
-}
+  constructor(bool: boolean) {
+    this.bool = bool;
+  }
 
-function Not(expr: Expr) {
-  return {
-    tag: "Not",
-    expr,
-  };
-}
+  #jsBoolToPy() {
+    return (
+      this.bool.toString().charAt(0).toUpperCase() +
+      this.bool.toString().slice(1)
+    );
+  }
 
-function IntLit(int: number) {
-  return {
-    tag: "IntLit",
-    int,
-  };
-}
+  show() {
+    return `BoolLit(${this.#jsBoolToPy()})`;
+  }
 
-function BoolLit(bool: boolean) {
-  return {
-    tag: "BoolLit",
-    bool,
-  };
-}
+  format() {
+    return `def inOrder(arg1, arg2):
+  ${this.show()}
+  `;
+  }
 
-function evaluate(p, input) {
-  switch (p.tag) {
-    case "IntLit":
-      return p.int;
-    case "BoolLit":
-      return p.bool;
-    case "Eq":
-      return evaluate(p.left, input) === evaluate(p.right, input);
-    case "Ite":
-      if (evaluate(p.guard, input)) {
-        return evaluate(p.ifBody, input);
-      } else {
-        return evaluate(p.elseBody, input);
-      }
+  evaluate(input: [OpTypeInt, OpTypeInt]) {
+    return this.bool;
   }
 }
 
-function grow(plist) {
-  const expansion = [];
+export class IntLit {
+  int: number;
+  tag = "IntLit";
 
-  for (const p of plist) {
-    expansion.push(Not(p));
+  constructor(int: number) {
+    this.int = int;
   }
 
-  for (const p1 of plist) {
-    for (const p2 of plist) {
-      expansion.push(Eq(p1, p2));
-    }
+  show() {
+    return `IntLit(${this.int})`;
   }
 
-  for (const p1 of plist) {
-    for (const p2 of plist) {
-      for (const p3 of plist) {
-        expansion.push(Ite(p1, p2, p3));
-      }
-    }
+  format() {
+    return `def inOrder(arg1, arg2):
+  ${this.show()}
+  `;
   }
 
-  return plist.concat(expansion);
+  evaluate(input: [OpTypeInt, OpTypeInt]) {
+    return this.int;
+  }
 }
 
-export function synthesize() {
-  let plist = [BoolLit(true), BoolLit(false), IntLit(0), IntLit(1)];
+export class Var {
+  name: "arg1[0]" | "arg2[0]";
+  tag = "Var";
 
-  for (let i = 0; i < 2; i++) {
-    plist = grow(plist);
+  constructor(name: "arg1[0]" | "arg2[0]") {
+    this.name = name;
   }
 
-  console.log(plist);
+  show() {
+    return this.name;
+  }
+
+  format() {
+    return `def inOrder(arg1, arg2):
+  ${this.show()}
+  `;
+  }
+
+  evaluate(input: [OpTypeInt, OpTypeInt]) {
+    return this.name === "arg1[0]" ? input[0] : input[1];
+  }
 }
+
+export class Eq {
+  left: Var | IntLit;
+  right: Var | IntLit;
+  tag = "Eq";
+
+  constructor(left: Var | IntLit, right: Var | IntLit) {
+    this.left = left;
+    this.right = right;
+  }
+
+  show() {
+    return `Eq(${this.left.show()}, ${this.right.show()})`;
+  }
+
+  format() {
+    return `def inOrder(arg1, arg2):
+  ${this.show()}
+  `;
+  }
+
+  evaluate(input: [OpTypeInt, OpTypeInt]) {
+    return this.left.evaluate(input) === this.right.evaluate(input);
+  }
+}
+
+export class Not {
+  expr: BoolLit | Eq;
+  tag = "Not";
+
+  constructor(expr: BoolLit | Eq) {
+    this.expr = expr;
+  }
+
+  show() {
+    return `Not(${this.expr.show()})`;
+  }
+
+  format() {
+    return `def inOrder(arg1, arg2):
+  ${this.show()}
+  `;
+  }
+
+  evaluate(input: [OpTypeInt, OpTypeInt]) {
+    return !this.expr.evaluate(input);
+  }
+}
+
+export class Ite {
+  guard: Eq | Not;
+  ifBody: BoolLit | Eq | Not;
+  elseBody: BoolLit | Eq | Not;
+
+  constructor(
+    guard: Eq | Not,
+    ifBody: BoolLit | Eq | Not,
+    elseBody: BoolLit | Eq | Not
+  ) {
+    this.guard = guard;
+    this.ifBody = ifBody;
+    this.elseBody = elseBody;
+  }
+
+  show() {
+    return `Ite(
+    ${this.guard.show()},
+    ${this.ifBody.show()},
+    ${this.elseBody.show()}
+  )`;
+  }
+
+  format() {
+    return `def inOrder(arg1, arg2):
+  ${this.show()}
+  `;
+  }
+
+  evaluate(input: [OpTypeInt, OpTypeInt]) {
+    return this.guard.evaluate(input)
+      ? this.ifBody.evaluate(input)
+      : this.elseBody.evaluate(input);
+  }
+}
+
+export type Expr = BoolLit | IntLit | Var | Eq | Not | Ite;
