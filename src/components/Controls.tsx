@@ -7,41 +7,27 @@ import type { Op, ReplicaId } from "../types/operations";
 const CanvasControls = () => {
   const [operations, setOperations] = useAtom(operationsAtom);
 
-  const incrementAddOp = React.useCallback(() => {
-    const nextOps = {} as Record<ReplicaId, Op[]>;
+  const incrementOp = React.useCallback(
+    (opType: "add" | "rmv") => () => {
+      const nextOps = {} as Record<ReplicaId, Op[]>;
 
-    for (const replica in operations) {
-      const addOp: Op = {
-        type: "add",
-        id: `operation_${operations[replica as ReplicaId].length}`,
-        payload: 0,
-        reconciled: false,
-      };
+      for (const replica in operations) {
+        const op: Op = {
+          type: opType,
+          id: `operation_${operations[replica as ReplicaId].length}`,
+          payload: 0,
+          reconciled: false,
+          first: replica === "1",
+        };
 
-      nextOps[replica as ReplicaId] =
-        operations[replica as ReplicaId].concat(addOp);
-    }
+        nextOps[replica as ReplicaId] =
+          operations[replica as ReplicaId].concat(op);
+      }
 
-    setOperations(nextOps);
-  }, [operations]);
-
-  const incrementRmvOp = React.useCallback(() => {
-    const nextOps = {} as Record<ReplicaId, Op[]>;
-
-    for (const replica in operations) {
-      const addOp: Op = {
-        type: "rmv",
-        id: `operation_${operations[replica as ReplicaId].length}`,
-        payload: 0,
-        reconciled: false,
-      };
-
-      nextOps[replica as ReplicaId] =
-        operations[replica as ReplicaId].concat(addOp);
-    }
-
-    setOperations(nextOps);
-  }, [operations]);
+      setOperations(nextOps);
+    },
+    [operations]
+  );
 
   return (
     <div className="col-span-12 flex stack font-mono items-center p-10 border-b border-b-outline">
@@ -50,13 +36,13 @@ const CanvasControls = () => {
       </h1>
       <button
         className="text-neon text-2xl border border-neon px-8 py-4 hover:bg-neon-light transition-colors"
-        onClick={incrementAddOp}
+        onClick={incrementOp("add")}
       >
         Add +
       </button>
       <button
         className="text-neon-negative text-2xl border border-neon-negative px-8 py-4 hover:bg-neon-negative-light transition-colors"
-        onClick={incrementRmvOp}
+        onClick={incrementOp("rmv")}
       >
         Remove -
       </button>
