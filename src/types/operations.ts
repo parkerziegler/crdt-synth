@@ -1,5 +1,8 @@
+export type OpType = "add" | "rmv" | null;
+export type OpTypeInt = 1 | 0 | -1;
+
 export interface Op {
-  type: "add" | "rmv" | null;
+  type: OpType;
   id: string;
   payload: number;
   reconciled: boolean;

@@ -1,5 +1,7 @@
 import { atom } from "jotai";
-import { Op } from "../types/operations";
+import zip from "lodash.zip";
+
+import { Op, OpTypeInt } from "../types/operations";
 
 const seedOperationType = () => {
   if (Math.random() < 0.33) {
@@ -29,4 +31,22 @@ const replica2InitialOperations = generateOperations({ first: false });
 export const operationsAtom = atom({
   "1": replica1InitialOperations,
   "2": replica2InitialOperations,
+});
+
+const opTypeToInt = {
+  add: 1 as const,
+  rmv: 0 as const,
+};
+
+export const pairedOperationsAtom = atom((get) => {
+  const operations = get(operationsAtom);
+
+  return zip(operations["1"], operations["2"]).map<[OpTypeInt, OpTypeInt]>(
+    ([op1, op2]) => {
+      const o1 = op1?.type ? opTypeToInt[op1.type] : -1;
+      const o2 = op2?.type ? opTypeToInt[op2.type] : -1;
+
+      return op1?.first ? [o1, o2] : [o2, o1];
+    }
+  );
 });

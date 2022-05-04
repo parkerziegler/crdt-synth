@@ -38,6 +38,19 @@ const Replica: React.FC<Props> = ({ replicaId }) => {
         [replicaId]: nextOpsForReplica,
       };
 
+      // Ensure that every operation _after_ the destination index has its
+      // reconciled flag set to false. We want to treat these operations as
+      // unreconciled while preserving previous user choices.
+      for (const replicaId in nextOps) {
+        for (const [i, operation] of nextOps[
+          replicaId as ReplicaId
+        ].entries()) {
+          if (i >= result.destination.index) {
+            operation.reconciled = false;
+          }
+        }
+      }
+
       setOperations(nextOps);
     },
     [operations]

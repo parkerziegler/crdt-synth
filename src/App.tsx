@@ -1,11 +1,11 @@
 import Canvas from "./components/Canvas";
-import MetaliftEditor from "./components/MetaliftEditor";
+import Synthesizer from "./components/Synthesizer";
 
 const App = () => {
   return (
     <div className="absolute inset-0 bg-canvas grid grid-cols-12">
       <Canvas />
-      <MetaliftEditor />
+      <Synthesizer />
     </div>
   );
 };
