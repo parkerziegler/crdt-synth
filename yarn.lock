@@ -305,6 +305,13 @@
     "@types/react" "*"
     hoist-non-react-statics "^3.3.0"
 
+"@types/lodash.shuffle@^4.2.7":
+  version "4.2.7"
+  resolved "https://registry.yarnpkg.com/@types/lodash.shuffle/-/lodash.shuffle-4.2.7.tgz#b714d829af948a266b0df1477d629c70de2f4c72"
+  integrity sha512-b+K0NBpB4WcNoQTfifuTmi5nm5mJXRw9DBdbFfBr1q1+EVoTKkClDxq/7r1sq2GZcRelMFRsFcGGHrHQgxRySg==
+  dependencies:
+    "@types/lodash" "*"
+
 "@types/lodash.zip@^4.2.7":
   version "4.2.7"
   resolved "https://registry.yarnpkg.com/@types/lodash.zip/-/lodash.zip-4.2.7.tgz#7f59b70e20d957a0fdbdbb907334ac2c470655f2"
@@ -921,6 +928,11 @@ lines-and-columns@^1.1.6:
   version "1.2.4"
   resolved "https://registry.yarnpkg.com/lines-and-columns/-/lines-and-columns-1.2.4.tgz#eca284f75d2965079309dc0ad9255abb2ebc1632"
   integrity sha512-7ylylesZQ/PV29jhEDl3Ufjo6ZX7gCqJr5F7PKrqc93v7fzSymt1BpwEU8nAUXs8qzzvqhbjhK5QZg6Mt/HkBg==
+
+lodash.shuffle@^4.2.0:
+  version "4.2.0"
+  resolved "https://registry.yarnpkg.com/lodash.shuffle/-/lodash.shuffle-4.2.0.tgz#145b5053cf875f6f5c2a33f48b6e9948c6ec7b4b"
+  integrity sha1-FFtQU8+HX29cKjP0i26ZSMbse0s=
 
 lodash.zip@^4.2.0:
   version "4.2.0"
