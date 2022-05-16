@@ -1,10 +1,10 @@
 import type { Replicas } from "../types/operations";
 
-export const findNonCommutativeOps = (ops: Replicas) => {
+export const findConflictOps = (replicas: Replicas) => {
   const nonCommutativeOps = [];
 
-  for (let i = 0; i < ops["1"].length; i++) {
-    const [replica1Op, replica2Op] = [ops["1"][i], ops["2"][i]];
+  for (let i = 0; i < replicas["1"].length; i++) {
+    const [replica1Op, replica2Op] = [replicas["1"][i], replicas["2"][i]];
     const areOppositeOps =
       (replica1Op.type === "add" && replica2Op.type === "rmv") ||
       (replica1Op.type === "rmv" && replica2Op.type === "add");
@@ -18,8 +18,8 @@ export const findNonCommutativeOps = (ops: Replicas) => {
   return nonCommutativeOps;
 };
 
-export const findNonCommutativeOpIndices = (ops: Replicas) => {
-  const nonCommutativeOps = findNonCommutativeOps(ops);
+export const findConflictOpIndices = (replicas: Replicas) => {
+  const nonCommutativeOps = findConflictOps(replicas);
 
   return nonCommutativeOps.map(({ index }) => index);
 };
