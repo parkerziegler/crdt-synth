@@ -305,6 +305,13 @@
     "@types/react" "*"
     hoist-non-react-statics "^3.3.0"
 
+"@types/lodash.random@^3.2.7":
+  version "3.2.7"
+  resolved "https://registry.yarnpkg.com/@types/lodash.random/-/lodash.random-3.2.7.tgz#3100a1b7956ce86ab5adcce2e7b305412b98e3bf"
+  integrity sha512-gFKkVgWYi1q7RFJ+QNTzaRprdhVIZLpZd6C3MTNehKcujMn9SyFUqf2fTBOmvIYXqNk0RpwfbdOwHf0GnEQB0g==
+  dependencies:
+    "@types/lodash" "*"
+
 "@types/lodash.shuffle@^4.2.7":
   version "4.2.7"
   resolved "https://registry.yarnpkg.com/@types/lodash.shuffle/-/lodash.shuffle-4.2.7.tgz#b714d829af948a266b0df1477d629c70de2f4c72"
@@ -928,6 +935,11 @@ lines-and-columns@^1.1.6:
   version "1.2.4"
   resolved "https://registry.yarnpkg.com/lines-and-columns/-/lines-and-columns-1.2.4.tgz#eca284f75d2965079309dc0ad9255abb2ebc1632"
   integrity sha512-7ylylesZQ/PV29jhEDl3Ufjo6ZX7gCqJr5F7PKrqc93v7fzSymt1BpwEU8nAUXs8qzzvqhbjhK5QZg6Mt/HkBg==
+
+lodash.random@^3.2.0:
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/lodash.random/-/lodash.random-3.2.0.tgz#96e24e763333199130d2c9e2fd57f91703cc262d"
+  integrity sha1-luJOdjMzGZEw0sni/Vf5FwPMJi0=
 
 lodash.shuffle@^4.2.0:
   version "4.2.0"
