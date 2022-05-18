@@ -13,8 +13,8 @@ cd dist
 # echo 'www.example.com' > CNAME
 
 # Configure the commit to be authored by github-actions.
-git config user.name github-actions
-git config user.email github-actions@github.com
+git config user.name 'github-actions[bot]'
+git config user.email 'github-actions[bot]@users.noreply.github.com'
 
 git init
 git checkout -b main

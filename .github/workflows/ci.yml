@@ -11,6 +11,8 @@ on:
 jobs:
   build:
     runs-on: macos-latest
+    permissions:
+      actions: write
     strategy:
       matrix:
         node-version: [14.x, 16.x]
