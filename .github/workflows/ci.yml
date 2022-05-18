@@ -27,5 +27,7 @@ jobs:
       - name: Build
         run: yarn build
       - name: Deploy
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: sh deploy.sh
         shell: bash
