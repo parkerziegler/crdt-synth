@@ -11,8 +11,6 @@ on:
 jobs:
   build:
     runs-on: macos-latest
-    permissions:
-      actions: write
     strategy:
       matrix:
         node-version: [14.x, 16.x]
@@ -26,6 +24,21 @@ jobs:
         run: yarn --frozen-lockfile --non-interactive
       - name: Build
         run: yarn build
+      - name: Upload build
+        uses: actions/upload-artifact@v2
+        with:
+          name: build
+          path: ./dist
+  deploy:
+    name: Deploy
+    needs: build
+    runs-on: macos-latest
+    steps:
+      - name: Download build
+        uses: actions/download-artifact@v2
+        with:
+          name: build
+          path: ./dist
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         with:
