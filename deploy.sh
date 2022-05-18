@@ -1,26 +1,27 @@
 #!/usr/bin/env sh
 
-# abort on errors
+# Abort on errors.
 set -e
 
-# build
+# Build.
 yarn build
 
-# navigate into the build output directory
+# Navigate into the build output directory.
 cd dist
 
-# if you are deploying to a custom domain
+# If we later deploy to a custom domain, echo that domain into CNAME.
 # echo 'www.example.com' > CNAME
+
+# Configure the commit to be authored by github-actions.
+git config user.name github-actions
+git config user.email github-actions@github.com
 
 git init
 git checkout -b main
 git add -A
 git commit -m 'deploy'
 
-# if you are deploying to https://<USERNAME>.github.io
-# git push -f git@github.com:<USERNAME>/<USERNAME>.github.io.git main
-
-# if you are deploying to https://<USERNAME>.github.io/<REPO>
+# Deploy to gh-pages.
 git push -f git@github.com:parkerziegler/crdt-synth.git main:gh-pages
 
 cd -
