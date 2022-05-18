@@ -18,48 +18,64 @@ const Synthesizer = () => {
   }, [conflicts, pairedOperations]);
 
   return (
-    <div className="col-span-12 lg:col-span-4 flex lg:flex-col font-mono border-l border-l-outline overflow-auto">
-      <h2 className="text-4xl font-mono text-neon p-8 border-b border-b-outline text-vertical lg:text-horizontal">
-        Candidates
-      </h2>
+    <div className="col-span-12 lg:col-span-4 flex lg:flex-col font-mono border-l border-l-outline overflow-hidden">
+      <div className="flex justify-between items-center p-8">
+        <h2 className="text-4xl font-mono text-neon border-b border-b-outline text-vertical lg:text-horizontal">
+          Candidates
+        </h2>
+        {programs.length > 0 ? (
+          <span className="text-xl ml-auto text-white">
+            {programs.length} programs synthesized
+          </span>
+        ) : null}
+      </div>
       {conflicts.length > 0 ? (
         <p className="p-8 text-3xl font-mono text-white">
           Resolve commutative conflicts to see synthesized candidates...
         </p>
       ) : (
-        programs.map((program, i) => (
-          <Highlight
-            {...defaultProps}
-            code={program.format()}
-            language="python"
-            theme={vsDark}
-            key={i}
-          >
-            {({ className, style, tokens, getLineProps, getTokenProps }) => (
-              <pre
-                className={cs(
-                  "p-8 text-2xl overflow-auto border-b border-b-outline",
-                  className
-                )}
-                style={style}
+        <ul className="overflow-auto">
+          {programs.map((program, i) => (
+            <li key={i}>
+              <Highlight
+                {...defaultProps}
+                code={program.format()}
+                language="python"
+                theme={vsDark}
               >
-                {tokens.map((line, i) => (
-                  <div
-                    {...getLineProps({ line, key: i })}
-                    className="table-row"
+                {({
+                  className,
+                  style,
+                  tokens,
+                  getLineProps,
+                  getTokenProps,
+                }) => (
+                  <pre
+                    className={cs(
+                      "p-8 text-2xl overflow-x-auto shrink-0 border-b border-b-outline",
+                      className
+                    )}
+                    style={style}
                   >
-                    <span className="table-cell pr-4 text-right select-none opacity-50">
-                      {i + 1}
-                    </span>
-                    {line.map((token, key) => (
-                      <span {...getTokenProps({ token, key })} />
+                    {tokens.map((line, i) => (
+                      <div
+                        {...getLineProps({ line, key: i })}
+                        className="table-row"
+                      >
+                        <span className="table-cell pr-4 text-right select-none opacity-50">
+                          {i + 1}
+                        </span>
+                        {line.map((token, key) => (
+                          <span {...getTokenProps({ token, key })} />
+                        ))}
+                      </div>
                     ))}
-                  </div>
-                ))}
-              </pre>
-            )}
-          </Highlight>
-        ))
+                  </pre>
+                )}
+              </Highlight>
+            </li>
+          ))}
+        </ul>
       )}
     </div>
   );
