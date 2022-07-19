@@ -1,4 +1,4 @@
-import { OpTypeInt } from "../types/operations";
+import type { OpTypeInt } from "../types/operations";
 
 export class BoolLit {
   bool: boolean;

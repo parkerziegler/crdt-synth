@@ -61,15 +61,19 @@ function grow(programList: Expr[]): Expr[] {
  * @returns — a Boolean flag indicating if the candidate program returns true
  * for all input pairs.
  */
-function check(program: Expr, inputs: [OpTypeInt, OpTypeInt][]): boolean {
+function check(
+  program: Expr,
+  inputs: [OpTypeInt, OpTypeInt][],
+  outputs: boolean[]
+): boolean {
   // Enforce that any correct program should use both operations.
   const usesOps =
     program.show().includes("arg1") && program.show().includes("arg2");
 
-  // Enforce that a correct program returns true for all input pairs.
-  // We check for strict equality against true because valid programs
-  // in our grammar can evaluate to integer literals 0 and 1.
-  const allEvalTrue = inputs.every((input) => program.evaluate(input) === true);
+  // Enforce that a correct program returns its corresponding output on all input pairs.
+  const allEvalTrue = inputs.every(
+    (input, i) => program.evaluate(input) === outputs[i]
+  );
 
   return usesOps && allEvalTrue;
 }
@@ -78,9 +82,13 @@ function check(program: Expr, inputs: [OpTypeInt, OpTypeInt][]): boolean {
  * The entry point to the synthesis engine.
  *
  * @param inputs — the set of inputs to evaluate a candidate program against.
+ * @param outputs — the set of expected outputs corresponding to the inputs.
  * @returns — a set of programs satisfying the current specification.
  */
-export function synthesize(inputs: [OpTypeInt, OpTypeInt][]): Expr[] {
+export function synthesize(
+  inputs: [OpTypeInt, OpTypeInt][],
+  outputs: boolean[]
+): Expr[] {
   // Begin with the list of all terminals in the grammar.
   let programList: Expr[] = [
     new BoolLit(true),
@@ -98,7 +106,7 @@ export function synthesize(inputs: [OpTypeInt, OpTypeInt][]): Expr[] {
     programList = grow(programList);
 
     for (const program of programList) {
-      const result = check(program, inputs);
+      const result = check(program, inputs, outputs);
 
       if (result && !satisfyingPrograms.includes(program)) {
         satisfyingPrograms.push(program);

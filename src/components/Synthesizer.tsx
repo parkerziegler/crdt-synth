@@ -9,13 +9,13 @@ import { synthesize } from "../synthesis/synthesis";
 import { conflictsAtom } from "../atoms/conflicts";
 
 const Synthesizer = () => {
-  const pairedOperations = useAtomValue(pairedOperationsAtom);
+  const { pairs, outputs } = useAtomValue(pairedOperationsAtom);
   const conflicts = useAtomValue(conflictsAtom);
 
   const programs = React.useMemo(() => {
     // Only run the synthesizer if all conflicts have been resolved.
-    return conflicts.length === 0 ? synthesize(pairedOperations) : [];
-  }, [conflicts, pairedOperations]);
+    return conflicts.length === 0 ? synthesize(pairs, outputs) : [];
+  }, [conflicts, pairs, outputs]);
 
   return (
     <div className="col-span-12 lg:col-span-4 flex lg:flex-col font-mono border-l border-l-outline overflow-hidden">

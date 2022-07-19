@@ -3,7 +3,7 @@ import zip from "lodash.zip";
 import shuffle from "lodash.shuffle";
 import random from "lodash.random";
 
-import { Op, OpType, OpTypeInt, Replicas } from "../types/operations";
+import type { OpType, OpTypeInt, Replicas } from "../types/operations";
 
 const INITIAL_OPERATION_COUNT = 5;
 const MAX_OPERATION_PAYLOAD = 10;
@@ -124,12 +124,26 @@ const OP_TYPE_TO_INT = {
 export const pairedOperationsAtom = atom((get) => {
   const operations = get(operationsAtom);
 
-  return zip(operations["1"], operations["2"]).map<[OpTypeInt, OpTypeInt]>(
-    ([op1, op2]) => {
-      const o1 = op1?.type ? OP_TYPE_TO_INT[op1.type] : -1;
-      const o2 = op2?.type ? OP_TYPE_TO_INT[op2.type] : -1;
+  return zip(operations["1"], operations["2"]).reduce(
+    (acc, el) => {
+      const [op1, op2] = el;
 
-      return op1?.first ? [o1, o2] : [o2, o1];
-    }
+      if (!op1 || !op2) {
+        throw new Error("Operation sequences have mismatching lengths.");
+      }
+
+      const o1 = op1.type ? OP_TYPE_TO_INT[op1.type] : -1;
+      const o2 = op2.type ? OP_TYPE_TO_INT[op2.type] : -1;
+
+      acc.pairs.push([o1, o2]);
+
+      // If op1.first is true, it means the synthesized inOrder function should maark
+      // the sequence as being allowed. Conversely, if op1.first is false, it means
+      // the sequence should be flagged as disallowed according to the ordering relation.
+      acc.outputs.push(op1.first);
+
+      return acc;
+    },
+    { pairs: [] as [OpTypeInt, OpTypeInt][], outputs: [] as boolean[] }
   );
 });
